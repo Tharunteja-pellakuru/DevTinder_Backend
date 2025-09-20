@@ -52,20 +52,18 @@ A Node.js backend for **DevTinder**, a social connection platform for developers
 
 ### **ConnectionRequestRouter**
 
-| Method | Route                            | Description                              |
-| ------ | -------------------------------- | ---------------------------------------- |
-| POST   | /request/send/:status/:userId    | Send request (status: ignore/interested) |
-| POST   | /request/send/ignored/:userId    | Ignore a request                         |
-| POST   | /request/review/accepted/:userId | Accept a request                         |
-| POST   | /request/review/rejected/:userId | Reject a request                         |
+| Method | Route                           | Description                                |
+| ------ | ------------------------------- | ------------------------------------------ |
+| POST   | /request/send/:status/:userId   | Send request (status: ignore/interested)   |
+| POST   | /request/review/:status/:userId | review request (status: accepted/rejected) |
 
 ### **UserRouter**
 
 | Method | Route                   | Description                  |
 | ------ | ----------------------- | ---------------------------- |
-| GET    | /user/connections       | Get all accepted connections |
 | GET    | /user/requests/recieved | Get all received requests    |
-| GET    | /user/feed              | Get user feed                |
+| GET    | /user/connections       | Get all accepted connections |
+| GET    | /feed                   | Get user feed                |
 
 > Request status can be: `ignore`, `interested`, `accepted`, `rejected`.
 
