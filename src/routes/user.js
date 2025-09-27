@@ -67,7 +67,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     const users = await User.find({
       _id: { $nin: Array.from(hideUsersFromFeed) },
     })
-      .select("_id firstName lastName photoUrl skills")
+      .select("_id firstName lastName photoUrl about age gender skills")
       .skip(skip)
       .limit(limit);
 

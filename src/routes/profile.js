@@ -5,10 +5,10 @@ const { validateEditProfileData } = require("../utils/validation");
 
 const profileRouter = express.Router();
 
-profileRouter.get("/profile", userAuth, async (req, res) => {
+profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
-    res.send(user);
+    res.json({ data: user });
   } catch (err) {
     res.status(400).send("ERROR:" + err.message);
   }
@@ -17,20 +17,16 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
     if (!validateEditProfileData(req)) {
-      throw new Error("Invalid Edit Request!");
+      throw new Error("Invalid edit request! Check allowed fields.");
     }
-    const loggedInUser = req.user;
 
-    Object.keys(loggedInUser).forEach(
-      (key) => (loggedInUser[key] = req.body[key])
-    );
-    await loggedInUser.save();
-    res.json({
-      message: "Your profile updated successfully",
-      data: loggedInUser,
-    });
+    const user = req.user;
+    Object.keys(req.body).forEach((key) => (user[key] = req.body[key]));
+    await user.save();
+
+    res.json({ message: "Profile updated successfully", data: user });
   } catch (err) {
-    res.status(400).send("ERROR : " + err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 

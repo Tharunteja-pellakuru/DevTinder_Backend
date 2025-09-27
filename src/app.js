@@ -1,31 +1,33 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const connectDB = require("./config/database");
-const authRouter = require("./routes/auth");
-const profileRouter = require("./routes/profile");
-const requestRouter = require("./routes/request");
-const userRouter = require("./routes/user");
-
 const app = express();
 
-// JSON middleware
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+
 app.use("/", authRouter);
+app.use("/", userRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
-app.use("/", userRouter);
 
-//connecting with Database
 connectDB()
   .then(() => {
-    console.log("Database connection established...");
-    app.listen(7777, () => {
-      console.log("Server is established on port 7777.....");
-    });
+    console.log("Database Connection Established");
+    app.listen(7777, () => console.log("Server running on port 7777"));
   })
-  .catch((err) => {
-    console.log("Database connection is not established!!!");
-  });
+  .catch((err) => console.log("DB connection failed", err));
