@@ -25,7 +25,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
 userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInId = req.user._id;
-    const USER_DETAILS = "_id firstName lastName photoUrl skills";
+    const USER_DETAILS = "_id firstName lastName photoUrl skills about";
     const connections = await ConnectionRequest.find({
       $or: [
         { fromUserId: loggedInId, status: "accepted" },
@@ -33,7 +33,6 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       ],
     }).populate("fromUserId toUserId", USER_DETAILS);
 
-    console.log(connections);
     const data = connections.map((user) => {
       if (user.fromUserId.toString() === loggedInId.toString()) {
         return user.toUserId;
@@ -58,7 +57,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
       $or: [{ fromUserId: loggedInId }, { toUserId: loggedInId }],
     }).select("fromUserId toUserId");
 
-    const hideUsersFromFeed = new Set();
+    const hideUsersFromFeed = new Set([loggedInId.toString()]);
     connections.forEach((connection) => {
       hideUsersFromFeed.add(connection.fromUserId.toString());
       hideUsersFromFeed.add(connection.toUserId.toString());

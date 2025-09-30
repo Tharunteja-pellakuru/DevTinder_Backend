@@ -69,24 +69,24 @@ requestRouter.post(
       }
 
       const connectionRequest = await ConnectionRequest.findOne({
-        _id: requestId,
+        fromUserId: requestId,
         toUserId: loggedInUser._id,
         status: "interested",
       });
 
       if (!connectionRequest) {
         return res
-          .status(400)
+          .status(404)
           .json({ message: "Connection request not found!" });
       }
       connectionRequest.status = status;
 
       const data = await connectionRequest.save();
       res
-        .status(400)
+        .status(200)
         .json({ message: `Connection request ${status} successfully!` });
     } catch (err) {
-      res.status(400).json({ message: "ERROR : " + err.message });
+      res.status(500).json({ message: "ERROR : " + err.message });
     }
   }
 );
